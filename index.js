@@ -16,9 +16,7 @@ function getToken(issuerID, minute, privateKey, keyId) {
     }
   }
 
-  const a = jwt.sign(payload, privateKey, options);
-  console.log(a);
-  return a;
+  return jwt.sign(payload, privateKey, options);
 }
 
 async function get(url, params, token, method = "GET") {
@@ -68,10 +66,11 @@ async function run() {
     const signType = core.getInput(`signType`);
 
     const token = getToken(issuerID, 20, Buffer.from(appStoreConnectPrivateKey, "utf8"), keyID);
-    console.log("request1 start");
-    const bundleIdResponse = await get("https://api.appstoreconnect.apple.com/v1/bundleIds", { "filter[identifier]": bundleIdentifier }, token); // BundleIdsResponse Type
-    console.log("request1 end");
-    const bundleId = bundleIdResponse.data.find(element => element.attributes.identifier == bundleIdentifier);
+    //console.log("request1 start");
+    //const bundleIdResponse = await get("https://api.appstoreconnect.apple.com/v1/bundleIds", { "filter[identifier]": bundleIdentifier }, token); // BundleIdsResponse Type
+    //console.log("request1 end");
+    //const bundleId = bundleIdResponse.data.find(element => element.attributes.identifier == bundleIdentifier);
+    const bundleId = 'X8NM9H6V3Z'
     console.log(bundleId);
     if (bundleId) {
       const profileIds = await get(`https://api.appstoreconnect.apple.com/v1/bundleIds/${bundleId.id}/relationships/profiles`, { }, token);
@@ -99,6 +98,7 @@ async function run() {
     }
 
   } catch (error) {
+    console.log(error);
     console.log(error.message);
     core.setFailed(error.message);
   }
