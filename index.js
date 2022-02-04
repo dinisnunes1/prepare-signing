@@ -65,7 +65,9 @@ async function run() {
     const signType = core.getInput(`signType`);
 
     const token = getToken(issuerID, 2, Buffer.from(appStoreConnectPrivateKey, "utf8"), keyID);
+    console.log("request1 start");
     const bundleIdResponse = await get("https://api.appstoreconnect.apple.com/v1/bundleIds", { "filter[identifier]": bundleIdentifier }, token); // BundleIdsResponse Type
+    console.log("request1 end");
     const bundleId = bundleIdResponse.data.find(element => element.attributes.identifier == bundleIdentifier);
     console.log(bundleId);
     if (bundleId) {
