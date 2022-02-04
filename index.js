@@ -15,7 +15,10 @@ function getToken(issuerID, minute, privateKey, keyId) {
       kid: keyId
     }
   }
-  return jwt.sign(payload, privateKey, options);
+
+  const a = jwt.sign(payload, privateKey, options);
+  console.log(a);
+  return a;
 }
 
 async function get(url, params, token, method = "GET") {
@@ -64,8 +67,7 @@ async function run() {
     const bundleIdentifier = core.getInput(`bundleIdentifier`);
     const signType = core.getInput(`signType`);
 
-    const token = getToken(issuerID, 2, Buffer.from(appStoreConnectPrivateKey, "utf8"), keyID);
-    console.log(token);
+    const token = getToken(issuerID, 20, Buffer.from(appStoreConnectPrivateKey, "utf8"), keyID);
     console.log("request1 start");
     const bundleIdResponse = await get("https://api.appstoreconnect.apple.com/v1/bundleIds", { "filter[identifier]": bundleIdentifier }, token); // BundleIdsResponse Type
     console.log("request1 end");
