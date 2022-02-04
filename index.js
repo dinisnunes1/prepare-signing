@@ -4,14 +4,14 @@ const jwt = require('jsonwebtoken');
 const axios = require('axios');
 
 function getToken(issuerID, minute, privateKey, keyId) {
-  const payload = { 
+  const payload = {
     exp: Math.floor(Date.now() / 1000) + (minute * 60),
     aud: "appstoreconnect-v1",
     iss: issuerID
   };
   const options = {
     algorithm: "ES256",
-    header: { 
+    header: {
       kid: keyId
     }
   }
@@ -55,7 +55,7 @@ async function run() {
   try {
 
     const appStoreConnectPrivateKey = core.getInput(`appStoreConnectPrivateKey`);
-    const keyID = core.getInput(`keyID`);  
+    const keyID = core.getInput(`keyID`);
     const issuerID = core.getInput(`issuerID`);
     const keychainName = core.getInput(`keychainName`);
     const keychainPassword = core.getInput(`keychainPassword`);
@@ -69,7 +69,7 @@ async function run() {
     const bundleId = bundleIdResponse.data.find(element => element.attributes.identifier == bundleIdentifier);
     console.log(bundleId);
     if (bundleId) {
-      const profileIds = await get(`https://api.appstoreconnect.apple.com/v1/bundleIds/${bundleId.id}/relationships/profiles`, { }, token);  
+      const profileIds = await get(`https://api.appstoreconnect.apple.com/v1/bundleIds/${bundleId.id}/relationships/profiles`, { }, token);
       const rawProfileIds = profileIds.data.map(profile => profile.id);
 
       if (rawProfileIds) {
@@ -81,10 +81,10 @@ async function run() {
           const profileUUID = profile.attributes.uuid;
 
           setupProvisioning(profileContent, profileUUID);
-          
+
           setupKeychain(keychainName, keychainPassword, base64P12File, p12Password);
         } else {
-          throw `Could not find matching provisioning profile for ${bundleIdentifier} on Developer Portal. Please check it on https://developer.apple.com/account/`;  
+          throw `Could not find matching provisioning profile for ${bundleIdentifier} on Developer Portal. Please check it on https://developer.apple.com/account/`;
         }
       } else {
         throw `Could not find provisioning profiles for ${bundleIdentifier} on Developer Portal. Please check it on https://developer.apple.com/account/resources/profiles/list`;
@@ -92,10 +92,11 @@ async function run() {
     } else {
       throw `Could not find bundleIdentifier ${bundleIdentifier} on Developer Portal. Please check it on https://developer.apple.com/account/resources/identifiers/list`;
     }
-  
+
   } catch (error) {
+    console.log(error.message);
     core.setFailed(error.message);
   }
-} 
+}
 
 run();
