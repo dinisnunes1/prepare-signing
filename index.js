@@ -70,10 +70,11 @@ async function run() {
     //const bundleIdResponse = await get("https://api.appstoreconnect.apple.com/v1/bundleIds", { "filter[identifier]": bundleIdentifier }, token); // BundleIdsResponse Type
     //console.log("request1 end");
     //const bundleId = bundleIdResponse.data.find(element => element.attributes.identifier == bundleIdentifier);
-    const bundleId = 'X8NM9H6V3Z'
-    console.log(bundleId);
-    if (bundleId) {
-      const profileIds = await get(`https://api.appstoreconnect.apple.com/v1/bundleIds/${bundleId.id}/relationships/profiles`, { }, token);
+    const bundleId_id = 'X8NM9H6V3Z'
+    console.log(bundleId_id);
+    //if (bundleId_id) {
+      //const profileIds = await get(`https://api.appstoreconnect.apple.com/v1/bundleIds/${bundleId.id}/relationships/profiles`, { }, token);
+      const profileIds = await get(`https://api.appstoreconnect.apple.com/v1/bundleIds/${bundleId_id}/relationships/profiles`, { }, token);
       const rawProfileIds = profileIds.data.map(profile => profile.id);
 
       if (rawProfileIds) {
@@ -93,9 +94,9 @@ async function run() {
       } else {
         throw `Could not find provisioning profiles for ${bundleIdentifier} on Developer Portal. Please check it on https://developer.apple.com/account/resources/profiles/list`;
       }
-    } else {
-      throw `Could not find bundleIdentifier ${bundleIdentifier} on Developer Portal. Please check it on https://developer.apple.com/account/resources/identifiers/list`;
-    }
+    //} else {
+    //  throw `Could not find bundleIdentifier ${bundleIdentifier} on Developer Portal. Please check it on https://developer.apple.com/account/resources/identifiers/list`;
+    //}
 
   } catch (error) {
     console.log(error);
